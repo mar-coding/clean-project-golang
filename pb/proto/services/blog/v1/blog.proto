@@ -1,0 +1,132 @@
+syntax = "proto3";
+package services.blog.v1;
+option go_package = "/proto-gen/services/blog/v1;blog";
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/protobuf/descriptor.proto";
+import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+//import "google/protobuf/empty.proto";
+import "googleapis/google/api/annotations.proto";
+//import "google/protobuf/struct.proto";
+
+// Service Information
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Blog Service";
+    version: "1.0";
+    contact: {
+      name: "amnrah";
+      url: "https://amnrah.xyz";
+      email: "test@amnrah.xyz";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "bearer"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "Authorization"
+        description: "Authentication token with prefixed Bearer"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "bearer"
+    }
+  }
+
+  schemes: HTTPS;
+  schemes: HTTP;
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+// =============== service permissions ===============
+
+extend google.protobuf.MethodOptions {
+  Permission permission = 1335954;
+}
+
+message Permission {
+  repeated Permissions permissions = 1;
+  bool optional = 2;
+  bool validate_permissions = 3;
+  bool captcha = 4;
+}
+
+enum Permissions {
+  NONE = 0;
+
+    CREATE_ARTICLE = 1;
+    READ_ARTICLE = 2;
+    UPDATE_ARTICLE = 3;
+    DELETE_ARTICLE = 4;
+
+}
+
+service BlogService {
+  // CreateArticle
+  //
+  // | Field ID    | Name      | Type                                                       | Required                  |
+  // | ----------- | --------- | ---------------------------------------------------------  | ---------------------------- | {{range .RequestType.Fields}}
+  // | {{.Number}} | {{.Name}} | {{if eq .Label.String "LABEL_REPEATED"}}[]{{end}}{{.Type}} | {{fieldcomments .Message .}} | {{end}}
+  rpc CreateArticle(CreateArticleRequest) returns(Article) {
+    option(google.api.http) = {
+      post: "/articles"
+      body: "*"
+    };
+    option(permission) = {
+      permissions: CREATE_ARTICLE,
+      validate_permissions: false,
+      optional: false,
+      captcha: false
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "create a new article",
+      tags: ["ARTICLE"]
+    };
+  }
+
+  // GetArticle
+  //
+  // | Field ID    | Name      | Type                                                       | Required                  |
+  // | ----------- | --------- | ---------------------------------------------------------  | ---------------------------- | {{range .RequestType.Fields}}
+  // | {{.Number}} | {{.Name}} | {{if eq .Label.String "LABEL_REPEATED"}}[]{{end}}{{.Type}} | {{fieldcomments .Message .}} | {{end}}
+  rpc GetArticle(GetArticleRequest) returns(Article ) {
+    option(google.api.http) = {
+      get: "/articles/{id}"
+    };
+    option(permission) = {
+      permissions: NONE,
+      validate_permissions: false,
+      optional: true,
+      captcha: false
+    };
+    option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "get an article by id",
+      tags: ["ARTICLE"]
+    };
+  }
+}
+
+message CreateArticleRequest {
+  // required
+  string title = 1 [(validate.rules).string = {min_len:5, max_len:500}];
+  string content = 2;
+}
+
+message Article {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message GetArticleRequest{
+  //require
+  string id = 1;
+}

@@ -1,0 +1,21 @@
+name: "blog"
+description: "blog service"
+code: 5
+version: "v1"
+
+permissions:
+  - name: "create_article"
+    description: "create new article"
+    code: 1
+
+  - name: "read_article"
+    description: "read a article"
+    code: 2
+
+  - name: "update_article"
+    description: "update a article"
+    code: 3
+
+  - name: "delete_article"
+    description: "delete a article"
+    code: 4

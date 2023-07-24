@@ -1,0 +1,44 @@
+address: "0.0.0.0"
+domain: "amnrah.xyz"
+development: true
+
+grpc:
+  port: 9003
+
+rest:
+  port: 8003
+
+#grpc_clients:
+#  - name: "user"
+#    address: "65.108.145.58"
+#    port: 9000
+#
+#  - name: "feedback"
+#    address: "65.108.145.58"
+#    port: 9002
+
+database:
+  mongodb:
+    uri: "mongodb://vista:C23utAf77xBUUtRE@65.108.145.58:27360/?directConnection=true"
+    database_name: "ipminter"
+#  redis:
+#    address: "65.108.145.58:2716"
+#    username: "defi"
+#    password: "bmMD8kLXdYsc8e8y"
+#    database: 0
+#  elastic:
+#    addresses:
+#      - https://elastic.sensifia.vc
+#    username: elastic
+#    password: EGhJDp4zkRT75mPD
+
+
+#logger:
+#  console_writer: true
+#  colorable_console: true
+
+#extra_data:
+#  front_base_url: "https://new-ipminter.sensifia.vc/"
+#  contact_us_forward_email:
+#    - "mohamadhasanbahari@gmail.com"
+#    - "sajjadfarrokhzad@gmail.com"
